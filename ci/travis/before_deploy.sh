@@ -32,7 +32,7 @@ if [ "${TRAVIS_BRANCH}" = "master" ]; then
 
     # Upgrading pip
     pip install --upgrade pip
-
+    cat $HOME/.cache/pip
     # Assuming pip 1.5.X is installed.
     pip install wheel --user
 
