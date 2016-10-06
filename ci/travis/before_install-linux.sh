@@ -55,11 +55,7 @@ echo "PATH=$PATH"
 echo "Installing wheel..."
 pip install wheel==0.25.0 --user || exit
 echo "Installing Python dependencies"
-pip install --use-wheel --user -r bindings/py/requirements.txt --quiet || exit
+pip install --user -r bindings/py/requirements.txt || exit
 
 pip install --user pycapnp==0.5.8 || exit
 pip install cpp-coveralls --user
-
-# Let's pip know to use the --user flag when installing.
-export PIP_USER=1
-
