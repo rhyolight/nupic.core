@@ -37,8 +37,16 @@ fi
 export PATH=$HOME/Library/Python/2.7/bin:$PATH
 export PYTHONPATH=$HOME/Library/Python/2.7/lib/python/site-packages:$PYTHONPATH
 
-echo "Numpy Version Before:"
+echo "Numpy Version Initial:"
 python -c 'import numpy; print numpy.__version__'
+pip uninstall numpy --user
+echo "Numpy Version After --user uninstall:"
+python -c 'import numpy; print numpy.__version__'
+pip uninstall numpy
+echo "Numpy Version After global uninstall:"
+python -c 'import numpy; print numpy.__version__'
+
+exit 1
 
 echo "Installing wheel..."
 pip install wheel==0.25.0 --user || exit
