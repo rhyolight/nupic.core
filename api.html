@@ -1,0 +1,558 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>NuPIC API Documentation &#8212; NuPIC 0.5.8.dev0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.5.8.dev0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="NuPIC API Documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-nupic.research.spatial_pooler">
+<span id="nupic-api-documentation"></span><h1>NuPIC API Documentation<a class="headerlink" href="#module-nupic.research.spatial_pooler" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="nupic.research.spatial_pooler.BinaryCorticalColumns">
+<em class="property">class </em><code class="descclassname">nupic.research.spatial_pooler.</code><code class="descname">BinaryCorticalColumns</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.BinaryCorticalColumns" title="Permalink to this definition">¶</a></dt>
+<dd><p>SparseBinaryMatrix variant of _SparseMatrixCorticalColumnAdapter.  Use in
+cases where column connections are represented as bitmaps.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="nupic.research.spatial_pooler.CorticalColumns">
+<em class="property">class </em><code class="descclassname">nupic.research.spatial_pooler.</code><code class="descname">CorticalColumns</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.CorticalColumns" title="Permalink to this definition">¶</a></dt>
+<dd><p>SparseMatrix variant of _SparseMatrixCorticalColumnAdapter.  Use in cases
+where column connections are represented as float values, such as permanence
+values</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="nupic.research.spatial_pooler.InvalidSPParamValueError">
+<em class="property">exception </em><code class="descclassname">nupic.research.spatial_pooler.</code><code class="descname">InvalidSPParamValueError</code><a class="headerlink" href="#nupic.research.spatial_pooler.InvalidSPParamValueError" title="Permalink to this definition">¶</a></dt>
+<dd><p>The user passed an invalid value for a SpatialPooler parameter</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="nupic.research.spatial_pooler.SpatialPooler">
+<em class="property">class </em><code class="descclassname">nupic.research.spatial_pooler.</code><code class="descname">SpatialPooler</code><span class="sig-paren">(</span><em>inputDimensions=(32</em>, <em>32)</em>, <em>columnDimensions=(64</em>, <em>64)</em>, <em>potentialRadius=16</em>, <em>potentialPct=0.5</em>, <em>globalInhibition=False</em>, <em>localAreaDensity=-1.0</em>, <em>numActiveColumnsPerInhArea=10.0</em>, <em>stimulusThreshold=0</em>, <em>synPermInactiveDec=0.008</em>, <em>synPermActiveInc=0.05</em>, <em>synPermConnected=0.1</em>, <em>minPctOverlapDutyCycle=0.001</em>, <em>dutyCyclePeriod=1000</em>, <em>boostStrength=0.0</em>, <em>seed=-1</em>, <em>spVerbosity=0</em>, <em>wrapAround=True</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class implements the spatial pooler. It is in charge of handling the
+relationships between the columns of a region and the inputs bits. The
+primary public interface to this function is the &#8220;compute&#8221; method, which
+takes in an input vector and returns a list of activeColumns columns.
+Example Usage:
+&gt;
+&gt; sp = SpatialPooler(...)
+&gt; for line in file:
+&gt;   inputVector = numpy.array(line)
+&gt;   sp.compute(inputVector)
+&gt;   ...</p>
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.compute">
+<code class="descname">compute</code><span class="sig-paren">(</span><em>inputVector</em>, <em>learn</em>, <em>activeArray</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the primary public method of the SpatialPooler class. This
+function takes a input vector and outputs the indices of the active columns.
+If &#8216;learn&#8217; is set to True, this method also updates the permanences of the
+columns.</p>
+<dl class="docutils">
+<dt>&#64;param inputVector: A numpy array of 0&#8217;s and 1&#8217;s that comprises the input</dt>
+<dd>to the spatial pooler. The array will be treated as a one dimensional
+array, therefore the dimensions of the array do not have to match the
+exact dimensions specified in the class constructor. In fact, even a
+list would suffice. The number of input bits in the vector must,
+however, match the number of bits specified by the call to the
+constructor. Therefore there must be a &#8216;0&#8217; or &#8216;1&#8217; in the array for
+every input bit.</dd>
+<dt>&#64;param learn: A boolean value indicating whether learning should be</dt>
+<dd>performed. Learning entails updating the  permanence values of the
+synapses, and hence modifying the &#8216;state&#8217; of the model. Setting
+learning to &#8216;off&#8217; freezes the SP and has many uses. For example, you
+might want to feed in various inputs and examine the resulting SDR&#8217;s.</dd>
+<dt>&#64;param activeArray: An array whose size is equal to the number of columns.</dt>
+<dd>Before the function returns this array will be populated with 1&#8217;s at
+the indices of the active columns, and 0&#8217;s everywhere else.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getActiveDutyCycles">
+<code class="descname">getActiveDutyCycles</code><span class="sig-paren">(</span><em>activeDutyCycles</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getActiveDutyCycles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the activity duty cycles for all columns. &#8216;activeDutyCycles&#8217;
+size must match the number of columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getBoostFactors">
+<code class="descname">getBoostFactors</code><span class="sig-paren">(</span><em>boostFactors</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getBoostFactors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the boost factors for all columns. &#8216;boostFactors&#8217; size must
+match the number of columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getBoostStrength">
+<code class="descname">getBoostStrength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getBoostStrength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the maximum boost value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getBoostedOverlaps">
+<code class="descname">getBoostedOverlaps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getBoostedOverlaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the boosted overlap score for each column.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getColumnDimensions">
+<code class="descname">getColumnDimensions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getColumnDimensions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the dimensions of the columns in the region</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getConnectedCounts">
+<code class="descname">getConnectedCounts</code><span class="sig-paren">(</span><em>connectedCounts</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getConnectedCounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of connected synapses for all columns.
+&#8216;connectedCounts&#8217; size must match the number of columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getConnectedSynapses">
+<code class="descname">getConnectedSynapses</code><span class="sig-paren">(</span><em>columnIndex</em>, <em>connectedSynapses</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getConnectedSynapses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the connected synapses for a given column.
+&#8216;connectedSynapses&#8217; size must match the number of inputs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getDutyCyclePeriod">
+<code class="descname">getDutyCyclePeriod</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getDutyCyclePeriod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the duty cycle period</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getGlobalInhibition">
+<code class="descname">getGlobalInhibition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getGlobalInhibition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether global inhibition is enabled</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getInhibitionRadius">
+<code class="descname">getInhibitionRadius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getInhibitionRadius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the inhibition radius</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getInputDimensions">
+<code class="descname">getInputDimensions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getInputDimensions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the dimensions of the input vector</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getIterationLearnNum">
+<code class="descname">getIterationLearnNum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getIterationLearnNum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the learning iteration number</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getIterationNum">
+<code class="descname">getIterationNum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getIterationNum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the iteration number</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getLocalAreaDensity">
+<code class="descname">getLocalAreaDensity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getLocalAreaDensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the local area density. Returns a value less than 0 if parameter
+is unused</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getMinOverlapDutyCycles">
+<code class="descname">getMinOverlapDutyCycles</code><span class="sig-paren">(</span><em>minOverlapDutyCycles</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getMinOverlapDutyCycles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the minimum overlap duty cycles for all columns.
+&#8216;_minOverlapDutyCycles&#8217; size must match the number of columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getMinPctOverlapDutyCycles">
+<code class="descname">getMinPctOverlapDutyCycles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getMinPctOverlapDutyCycles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the minimum tolerated overlaps, given as percent of
+neighbors overlap score</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getNumActiveColumnsPerInhArea">
+<code class="descname">getNumActiveColumnsPerInhArea</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getNumActiveColumnsPerInhArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of active columns per inhibition area. Returns a
+value less than 0 if parameter is unused</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getNumColumns">
+<code class="descname">getNumColumns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getNumColumns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getNumInputs">
+<code class="descname">getNumInputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getNumInputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of inputs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getOverlapDutyCycles">
+<code class="descname">getOverlapDutyCycles</code><span class="sig-paren">(</span><em>overlapDutyCycles</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getOverlapDutyCycles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the overlap duty cycles for all columns. &#8216;overlapDutyCycles&#8217;
+size must match the number of columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getOverlaps">
+<code class="descname">getOverlaps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getOverlaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the overlap score for each column.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getPermanence">
+<code class="descname">getPermanence</code><span class="sig-paren">(</span><em>columnIndex</em>, <em>permanence</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getPermanence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the permanence values for a given column. &#8216;permanence&#8217; size
+must match the number of inputs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getPotential">
+<code class="descname">getPotential</code><span class="sig-paren">(</span><em>columnIndex</em>, <em>potential</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getPotential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the potential mapping for a given column. &#8216;potential&#8217; size
+must match the number of inputs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getPotentialPct">
+<code class="descname">getPotentialPct</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getPotentialPct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the potential percent</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getPotentialRadius">
+<code class="descname">getPotentialRadius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getPotentialRadius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the potential radius</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getSpVerbosity">
+<code class="descname">getSpVerbosity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getSpVerbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the verbosity level</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getStimulusThreshold">
+<code class="descname">getStimulusThreshold</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getStimulusThreshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the stimulus threshold</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getSynPermActiveInc">
+<code class="descname">getSynPermActiveInc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getSynPermActiveInc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the permanence increment amount for active synapses
+inputs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getSynPermBelowStimulusInc">
+<code class="descname">getSynPermBelowStimulusInc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getSynPermBelowStimulusInc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the permanence increment amount for columns that have not been
+recently active</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getSynPermConnected">
+<code class="descname">getSynPermConnected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getSynPermConnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the permanence amount that qualifies a synapse as
+being connected</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getSynPermInactiveDec">
+<code class="descname">getSynPermInactiveDec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getSynPermInactiveDec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the permanence decrement amount for inactive synapses</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getSynPermTrimThreshold">
+<code class="descname">getSynPermTrimThreshold</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getSynPermTrimThreshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the permanence trim threshold</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.getUpdatePeriod">
+<code class="descname">getUpdatePeriod</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.getUpdatePeriod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the update period</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.printParameters">
+<code class="descname">printParameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.printParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Useful for debugging.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setActiveDutyCycles">
+<code class="descname">setActiveDutyCycles</code><span class="sig-paren">(</span><em>activeDutyCycles</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setActiveDutyCycles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the activity duty cycles for all columns. &#8216;activeDutyCycles&#8217;
+size must match the number of columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setBoostFactors">
+<code class="descname">setBoostFactors</code><span class="sig-paren">(</span><em>boostFactors</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setBoostFactors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the boost factors for all columns. &#8216;boostFactors&#8217; size must match
+the number of columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setBoostStrength">
+<code class="descname">setBoostStrength</code><span class="sig-paren">(</span><em>boostStrength</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setBoostStrength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the maximum boost value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setDutyCyclePeriod">
+<code class="descname">setDutyCyclePeriod</code><span class="sig-paren">(</span><em>dutyCyclePeriod</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setDutyCyclePeriod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the duty cycle period</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setGlobalInhibition">
+<code class="descname">setGlobalInhibition</code><span class="sig-paren">(</span><em>globalInhibition</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setGlobalInhibition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets global inhibition</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setInhibitionRadius">
+<code class="descname">setInhibitionRadius</code><span class="sig-paren">(</span><em>inhibitionRadius</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setInhibitionRadius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the inhibition radius</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setIterationLearnNum">
+<code class="descname">setIterationLearnNum</code><span class="sig-paren">(</span><em>iterationLearnNum</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setIterationLearnNum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the learning iteration number</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setIterationNum">
+<code class="descname">setIterationNum</code><span class="sig-paren">(</span><em>iterationNum</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setIterationNum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the iteration number</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setLocalAreaDensity">
+<code class="descname">setLocalAreaDensity</code><span class="sig-paren">(</span><em>localAreaDensity</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setLocalAreaDensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the local area density. Invalidates the &#8216;numActiveColumnsPerInhArea&#8217;
+parameter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setMinOverlapDutyCycles">
+<code class="descname">setMinOverlapDutyCycles</code><span class="sig-paren">(</span><em>minOverlapDutyCycles</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setMinOverlapDutyCycles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the minimum overlap duty cycles for all columns.
+&#8216;_minOverlapDutyCycles&#8217; size must match the number of columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setMinPctOverlapDutyCycles">
+<code class="descname">setMinPctOverlapDutyCycles</code><span class="sig-paren">(</span><em>minPctOverlapDutyCycles</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setMinPctOverlapDutyCycles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the minimum tolerated activity duty cycle, given as percent of
+neighbors&#8217; activity duty cycle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setNumActiveColumnsPerInhArea">
+<code class="descname">setNumActiveColumnsPerInhArea</code><span class="sig-paren">(</span><em>numActiveColumnsPerInhArea</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setNumActiveColumnsPerInhArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the number of active columns per inhibition area. Invalidates the
+&#8216;localAreaDensity&#8217; parameter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setOverlapDutyCycles">
+<code class="descname">setOverlapDutyCycles</code><span class="sig-paren">(</span><em>overlapDutyCycles</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setOverlapDutyCycles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the overlap duty cycles for all columns. &#8216;overlapDutyCycles&#8217;
+size must match the number of columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setPermanence">
+<code class="descname">setPermanence</code><span class="sig-paren">(</span><em>columnIndex</em>, <em>permanence</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setPermanence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the permanence values for a given column. &#8216;permanence&#8217; size
+must match the number of inputs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setPotential">
+<code class="descname">setPotential</code><span class="sig-paren">(</span><em>columnIndex</em>, <em>potential</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setPotential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the potential mapping for a given column. &#8216;potential&#8217; size
+must match the number of inputs, and must be greater than _stimulusThreshold</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setPotentialPct">
+<code class="descname">setPotentialPct</code><span class="sig-paren">(</span><em>potentialPct</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setPotentialPct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the potential percent</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setPotentialRadius">
+<code class="descname">setPotentialRadius</code><span class="sig-paren">(</span><em>potentialRadius</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setPotentialRadius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the potential radius</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setSpVerbosity">
+<code class="descname">setSpVerbosity</code><span class="sig-paren">(</span><em>spVerbosity</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setSpVerbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the verbosity level</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setStimulusThreshold">
+<code class="descname">setStimulusThreshold</code><span class="sig-paren">(</span><em>stimulusThreshold</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setStimulusThreshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the stimulus threshold</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setSynPermActiveInc">
+<code class="descname">setSynPermActiveInc</code><span class="sig-paren">(</span><em>synPermActiveInc</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setSynPermActiveInc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the permanence increment amount for active synapses</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setSynPermBelowStimulusInc">
+<code class="descname">setSynPermBelowStimulusInc</code><span class="sig-paren">(</span><em>synPermBelowStimulusInc</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setSynPermBelowStimulusInc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the permanence increment amount for columns that have not been
+recently active</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setSynPermConnected">
+<code class="descname">setSynPermConnected</code><span class="sig-paren">(</span><em>synPermConnected</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setSynPermConnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the permanence amount that qualifies a synapse as being
+connected</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setSynPermInactiveDec">
+<code class="descname">setSynPermInactiveDec</code><span class="sig-paren">(</span><em>synPermInactiveDec</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setSynPermInactiveDec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the permanence decrement amount for inactive synapses</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setSynPermTrimThreshold">
+<code class="descname">setSynPermTrimThreshold</code><span class="sig-paren">(</span><em>synPermTrimThreshold</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setSynPermTrimThreshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the permanence trim threshold</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.setUpdatePeriod">
+<code class="descname">setUpdatePeriod</code><span class="sig-paren">(</span><em>updatePeriod</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.setUpdatePeriod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the update period</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nupic.research.spatial_pooler.SpatialPooler.stripUnlearnedColumns">
+<code class="descname">stripUnlearnedColumns</code><span class="sig-paren">(</span><em>activeArray</em><span class="sig-paren">)</span><a class="headerlink" href="#nupic.research.spatial_pooler.SpatialPooler.stripUnlearnedColumns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the set of columns who have never been active from the set of
+active columns selected in the inhibition round. Such columns cannot
+represent learned pattern and are therefore meaningless if only inference
+is required. This should not be done when using a random, unlearned SP
+since you would end up with no active columns.</p>
+<dl class="docutils">
+<dt>&#64;param activeArray: An array whose size is equal to the number of columns.</dt>
+<dd>Any columns marked as active with an activeDutyCycle of 0 have
+never been activated before and therefore are not active due to
+learning. Any of these (unlearned) columns will be disabled (set to 0).</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">NuPIC API Documentation</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/api.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Numenta.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/api.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
