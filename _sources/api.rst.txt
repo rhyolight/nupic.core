@@ -1,5 +1,0 @@
-NuPIC API Documentation
-=================================
-
-.. automodule:: nupic.research.spatial_pooler
-   :members:
